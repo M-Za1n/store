@@ -1,3 +1,8 @@
+<?php 
+  require './db/dbconfig.php';
+  $sql = "SELECT * FROM Category";
+  $result = $conn->query($sql);
+?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -9,7 +14,7 @@
     <title>Bootstrap Example</title>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   </head>
-  <body class="p-3 m-0 border-0 bd-example m-0 border-0">
+  <body class="p-0 m-0 container-fluid bd-example ">
    <!-- nav bar  -->
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
@@ -23,30 +28,55 @@
               <a class="nav-link active" aria-current="page" href="#">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Products</a>
-            </li>
-            <li class="nav-item">
               <a class="nav-link" href="#">Contact</a>
             </li>
+            <li class="nav-item">
+              <div class="dropdown">
+                 <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Catagory
+                </button>
+                <ul class="dropdown-menu">
+                <?php 
+                  if ($result->num_rows >0 ){
+                    while($row=$result->fetch_assoc()){
+                      ?>
+                        <li><a class="dropdown-item" href="#"><?php echo $row["name"];?></a></li>
+                      <?php
+                    }
+                  }
+                ?>
+                </ul>
+              </div>
+            </li>
           </ul>
-          <form action="#" method="get">
-            <input type="text" class="form-control" placeholder="search here">
-          </form>
+          <div class="d-flex gap-1">
+            <form action="#" method="get">
+              <input type="text" class="form-control" placeholder="search here">
+            </form>
+            <a href="#" class="btn btn-danger">Sign In</a>
+          </div>
         </div>
       </div>
     </nav>
     <!-- header -->
-    <div id="carouselExample" class="carousel slide">
-        <div class="carousel-inner">
-          <div class="carousel-item active slide">
-            Slide 1
-        </div>
-          <div class="carousel-item slide">
-        slide 2  
-        </div>
-          <div class="carousel-item slide">
-        slide 3  
-        </div>
+      <div id="carouselExample" class="carousel slide col-md-12">
+          <div class="carousel-inner">
+          <?php
+          $sql='SELECT * FROM Product LIMIT 4';
+          $result= $conn->query($sql);
+          if($result->num_rows > 0){
+            $firstRender=true;
+            while($row=$result->fetch_assoc()){
+              ?>
+              <div class="carousel-item <?php echo $firstRender ? 'active' : ''; ?> slide">
+              
+            </div>    
+              <?php
+              $firstRender=false;
+            }
+          }
+          ?>  
+        
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -57,5 +87,5 @@
           <span class="visually-hidden">Next</span>
         </button>
       </div>
-  </body>
-</html>
+    </body>
+    </html>
